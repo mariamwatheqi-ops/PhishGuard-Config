@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>My History - PhishGuard</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold" href="/upload">PhishGuard</a>
+
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <span class="text-white-50 small">Logged in as <b class="text-white">{{ session.get("user") }}</b></span>
+      <a class="btn btn-outline-secondary btn-sm" href="/">Home</a>
+      <a class="btn btn-outline-info btn-sm" href="/inbox">Inbox</a>
+      <a class="btn btn-outline-light btn-sm" href="/upload">Upload</a>
+      <a class="btn btn-outline-warning btn-sm" href="/logout">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid px-4 py-4">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 fw-bold">My Upload History</h4>
+    <span class="text-muted small">Only your own cases appear here</span>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      {% if not rows %}
+        <div class="text-muted">No uploads yet.</div>
+      {% else %}
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Detected</th>
+              <th>Subject</th>
+              <th>Sender</th>
+              <th>Verdict</th>
+              <th>VT</th>
+              <th>MISP</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in rows %}
+            <tr>
+              <td>{{ r.detected_at }}</td>
+              <td>{{ r.subject }}</td>
+              <td>{{ r.sender_address }}</td>
+              <td>
+                {% if r.ml_verdict == 'phishing' %}
+                  <span class="badge bg-danger">Phishing</span>
+                {% else %}
+                  <span class="badge bg-success">Benign</span>
+                {% endif %}
+              </td>
+              <td>{{ r.vt_score or 0 }}</td>
+              <td>{{ r.misp_hits or 0 }}</td>
+              <td>
+                <a class="btn btn-sm btn-primary" href="/case/{{ r.detection_id }}">View Case</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

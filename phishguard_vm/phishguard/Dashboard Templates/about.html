@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PhishGuard – About Us</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root{
+      --pg-white: rgba(255,255,255,.92);
+      --pg-border: rgba(0,0,0,.10);
+      --pg-text: rgba(0,0,0,.86);
+      --pg-muted: rgba(0,0,0,.55);
+
+      --pg-neon-blue: #3aa0ff;
+      --pg-neon-purple: #7c5cff;
+      --pg-neon-green: #25dba1;
+      --pg-neon-yellow: #ffcf5a;
+      --pg-neon-red: #ff4d6d;
+
+      --pg-radius: 18px;
+      --pg-shadow: 0 14px 34px rgba(0,0,0,.12);
+    }
+
+    body{
+      background:
+        radial-gradient(1000px 650px at 10% 5%, rgba(58,160,255,.18), transparent 60%),
+        radial-gradient(900px 620px at 90% 15%, rgba(124,92,255,.16), transparent 60%),
+        radial-gradient(900px 700px at 55% 95%, rgba(37,219,161,.12), transparent 62%),
+        linear-gradient(180deg, #f7f9ff, #eef3ff);
+      color: var(--pg-text);
+    }
+
+    /* Topbar */
+    .pg-topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(255,255,255,.58);
+      border-bottom: 1px solid rgba(255,255,255,.35);
+      box-shadow: 0 10px 28px rgba(0,0,0,.10);
+    }
+
+    .pg-brand{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+    }
+    .pg-brand img{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      box-shadow:
+        0 0 0 3px rgba(255,255,255,.55),
+        0 10px 24px rgba(0,0,0,.16),
+        0 0 22px rgba(58,160,255,.25);
+    }
+    .pg-brand-title{ line-height: 1.08; }
+    .pg-brand-title .name{
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: var(--pg-text);
+    }
+    .pg-brand-title .sub{
+      font-size: .86rem;
+      color: var(--pg-muted);
+    }
+
+    .tool-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      font-weight: 800;
+      color: rgba(0,0,0,.72);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .tool-dot{
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display:inline-block;
+      background: var(--pg-neon-blue);
+      box-shadow: 0 0 0 5px rgba(58,160,255,.10);
+    }
+    .tool-dot.vt{ background: var(--pg-neon-yellow); box-shadow: 0 0 0 5px rgba(255,207,90,.14); }
+    .tool-dot.shuffle{ background: var(--pg-neon-purple); box-shadow: 0 0 0 5px rgba(124,92,255,.14); }
+    .tool-dot.wazuh{ background: var(--pg-neon-blue); box-shadow: 0 0 0 5px rgba(58,160,255,.14); }
+    .tool-dot.misp{ background: var(--pg-neon-green); box-shadow: 0 0 0 5px rgba(37,219,161,.14); }
+
+    /* Cards */
+    .pg-card{
+      background: var(--pg-white);
+      border: 1px solid rgba(255,255,255,.45);
+      border-radius: var(--pg-radius);
+      box-shadow: var(--pg-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .pg-card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius: calc(var(--pg-radius) + 2px);
+      padding: 2px;
+      background: linear-gradient(135deg,
+        rgba(58,160,255,.55),
+        rgba(124,92,255,.45),
+        rgba(37,219,161,.35)
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events:none;
+      opacity: .55;
+    }
+    .pg-card-header{
+      background: rgba(255,255,255,.60);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .pg-section-title{
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: rgba(0,0,0,.86);
+    }
+    .pg-mini{
+      font-size: .95rem;
+      color: var(--pg-muted);
+    }
+
+    /* Hero layout */
+    .hero{
+      padding: 22px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.70);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      font-weight: 850;
+      color: rgba(0,0,0,.70);
+      white-space: nowrap;
+    }
+    .hero h1{
+      font-weight: 950;
+      letter-spacing: .2px;
+      margin: 10px 0 8px;
+      font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+    }
+
+    /* Flow (bigger info + better animation) */
+    .flowWrap{
+      position: relative;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      overflow:hidden;
+    }
+    .flowWrap::after{
+      content:"";
+      position:absolute;
+      inset:auto -140px -140px auto;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(124,92,255,.18), transparent 60%);
+      transform: rotate(15deg);
+      pointer-events:none;
+    }
+
+    .flowSteps{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    @media (max-width: 1200px){
+      .flowSteps{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 576px){
+      .flowSteps{ grid-template-columns: 1fr; }
+    }
+
+    .flowStep{
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px;
+      padding: 14px 12px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      min-height: 110px;
+      position: relative;
+      overflow:hidden;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .flowStep:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(0,0,0,.12);
+    }
+    .flowIcon{
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(58,160,255,.12);
+      margin-bottom: 8px;
+      flex: 0 0 auto;
+    }
+    .flowIcon i{ font-size: 1.15rem; color: rgba(0,0,0,.70); }
+
+    .flowLabel{
+      font-weight: 950;
+      letter-spacing: .15px;
+      color: rgba(0,0,0,.84);
+      margin-bottom: 2px;
+    }
+    .flowDesc{
+      margin:0;
+      color: rgba(0,0,0,.62);
+      font-size: .92rem;
+      line-height: 1.25;
+    }
+
+    /* Active step highlight (cycled by JS) */
+    .flowStep.active{
+      outline: 3px solid rgba(58,160,255,.20);
+      box-shadow: 0 18px 36px rgba(58,160,255,.14), 0 18px 36px rgba(0,0,0,.10);
+    }
+    .flowStep.active .flowIcon{
+      background: linear-gradient(135deg, rgba(58,160,255,.22), rgba(124,92,255,.20));
+    }
+    .flowStep.active::before{
+      content:"";
+      position:absolute;
+      inset:-30px auto auto -40px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(58,160,255,.18), transparent 60%);
+      pointer-events:none;
+    }
+
+    /* Track + runner */
+    .flowTrack{
+      margin-top: 14px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(58,160,255,.14);
+      border: 1px solid rgba(0,0,0,.08);
+      position: relative;
+      overflow:hidden;
+      z-index: 2;
+    }
+    .flowRunner{
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        rgba(58,160,255,.0),
+        rgba(58,160,255,.95),
+        rgba(124,92,255,.95),
+        rgba(37,219,161,.90),
+        rgba(58,160,255,.0)
+      );
+      filter: blur(.1px);
+      box-shadow: 0 0 24px rgba(58,160,255,.25);
+      animation: runTrack 4.8s linear infinite;
+    }
+    @keyframes runTrack{
+      0%{ left: -180px; opacity: .0; }
+      8%{ opacity: 1; }
+      92%{ opacity: 1; }
+      100%{ left: calc(100% + 180px); opacity: .0; }
+    }
+
+    /* Screenshot gallery — perfectly aligned */
+    .shotsGrid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1200px){
+      .shotsGrid{ grid-template-columns: repeat(6, 1fr); }
+    }
+    @media (max-width: 576px){
+      .shotsGrid{ grid-template-columns: repeat(1, 1fr); }
+    }
+
+    .shotCard{
+      grid-column: span 4;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: 0 16px 34px rgba(0,0,0,.12);
+      cursor: zoom-in;
+      transition: transform .18s ease, box-shadow .18s ease;
+      height: 100%;
+      display:flex;
+      flex-direction: column;
+    }
+    @media (max-width: 1200px){
+      .shotCard{ grid-column: span 6; }
+    }
+    @media (max-width: 576px){
+      .shotCard{ grid-column: span 1; }
+    }
+
+    .shotCard:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 22px 44px rgba(0,0,0,.16);
+    }
+
+    /* Force SAME visual height for all images */
+    .shotImgWrap{
+      height: 210px;
+      background: rgba(255,255,255,.8);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      overflow:hidden;
+    }
+    .shotImgWrap img{
+      width:100%;
+      height:100%;
+      object-fit: cover;          /* makes them perfectly aligned */
+      object-position: top;       /* keeps headers visible */
+      transform: scale(1.01);
+      transition: transform .25s ease;
+      display:block;
+    }
+    .shotCard:hover .shotImgWrap img{
+      transform: scale(1.06);
+    }
+
+    .shotBody{
+      padding: 12px 12px 14px;
+      flex: 1 1 auto;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .shotTitle{
+      font-weight: 950;
+      color: rgba(0,0,0,.82);
+      margin: 0 0 4px;
+      font-size: 1rem;
+    }
+    .shotMeta{
+      margin:0;
+      color: rgba(0,0,0,.60);
+      font-size:.92rem;
+      line-height: 1.25;
+    }
+    .shotBadge{
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 900;
+      font-size: .78rem;
+      background: rgba(255,255,255,.72);
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .footer{
+      text-align:center;
+      color: rgba(0,0,0,.55);
+      font-size:.92rem;
+      margin-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="pg-topbar py-3">
+  <div class="container-fluid px-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+
+      <div class="pg-brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="PhishGuard Logo">
+        <div class="pg-brand-title">
+          <div class="name">PhishGuard – About Us</div>
+          <div class="sub">AI + Threat Intelligence • SIEM + SOAR</div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap">
+        <span class="tool-pill"><span class="tool-dot vt"></span><i class="bi bi-shield-check"></i> VirusTotal</span>
+        <span class="tool-pill"><span class="tool-dot misp"></span><i class="bi bi-database-check"></i> MISP</span>
+        <span class="tool-pill"><span class="tool-dot wazuh"></span><i class="bi bi-broadcast"></i> Wazuh</span>
+        <span class="tool-pill"><span class="tool-dot shuffle"></span><i class="bi bi-lightning-charge"></i> Shuffle</span>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap align-items-center">
+        <a href="/" class="btn btn-outline-secondary"><i class="bi bi-speedometer2"></i> Home</a>
+        <a href="/upload" class="btn btn-outline-primary"><i class="bi bi-cloud-arrow-up"></i> Upload</a>
+        <a href="/inbox" class="btn btn-outline-success"><i class="bi bi-inboxes"></i> Inbox Monitor</a>
+        <a href="/history" class="btn btn-outline-dark"><i class="bi bi-clock-history"></i> My History</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid px-4 py-4">
+
+  <!-- HERO + FLOW (balanced, no empty space) -->
+  <div class="row g-3 mb-3 align-items-stretch">
+    <div class="col-12 col-xl-6">
+      <div class="pg-card hero h-100">
+        <div class="d-flex gap-2 flex-wrap mb-2">
+          <span class="pill"><i class="bi bi-envelope"></i> Email Security</span>
+          <span class="pill"><i class="bi bi-cpu"></i> ML Detection</span>
+          <span class="pill"><i class="bi bi-shield-check"></i> Threat Intel</span>
+          <span class="pill"><i class="bi bi-broadcast"></i> SOC Integrations</span>
+        </div>
+
+        <h1>PhishGuard detects phishing emails and automates response.</h1>
+
+        <p class="pg-mini mt-2 mb-0">
+          PhishGuard analyzes emails, extracts suspicious indicators, predicts phishing risk using ML,
+          enriches evidence with VirusTotal + MISP, and forwards alerts to Wazuh + Shuffle for investigation and action.
+        </p>
+
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-6">
+      <div class="pg-card h-100">
+        <div class="pg-card-header px-3 py-3">
+          <div class="pg-section-title"><i class="bi bi-play-circle"></i> Live Detection Flow</div>
+          <div class="pg-mini">Email → Extract → ML → Threat Intel → SIEM/SOAR</div>
+        </div>
+
+        <div class="p-3">
+          <div class="flowWrap">
+            <div class="flowSteps" id="flowSteps">
+
+              <div class="flowStep" data-step="0">
+                <div class="flowIcon"><i class="bi bi-inboxes"></i></div>
+                <div class="flowLabel">Ingest</div>
+                <p class="flowDesc">Upload a .eml file or monitor the mailbox (IMAP).</p>
+              </div>
+
+              <div class="flowStep" data-step="1">
+                <div class="flowIcon" style="background:rgba(58,160,255,.10)"><i class="bi bi-funnel"></i></div>
+                <div class="flowLabel">Extract</div>
+                <p class="flowDesc">Pull URLs, domains, sender info, and content signals.</p>
+              </div>
+
+              <div class="flowStep" data-step="2">
+                <div class="flowIcon" style="background:rgba(124,92,255,.12)"><i class="bi bi-cpu"></i></div>
+                <div class="flowLabel">ML Verdict</div>
+                <p class="flowDesc">Predict <b>Phishing</b> vs <b>Safe</b> using the trained model.</p>
+              </div>
+
+              <div class="flowStep" data-step="3">
+                <div class="flowIcon" style="background:rgba(255,207,90,.16)"><i class="bi bi-shield-check"></i></div>
+                <div class="flowLabel">Threat Intel</div>
+                <p class="flowDesc">VirusTotal + MISP add real-world reputation and context.</p>
+              </div>
+
+              <div class="flowStep" data-step="4">
+                <div class="flowIcon" style="background:rgba(37,219,161,.14)"><i class="bi bi-broadcast"></i></div>
+                <div class="flowLabel">SIEM + SOAR</div>
+                <p class="flowDesc">Wazuh logs the case. Shuffle triggers alerts / playbooks.</p>
+              </div>
+
+            </div>
+
+            <div class="flowTrack mt-3" aria-hidden="true">
+              <span class="flowRunner"></span>
+            </div>
+
+            <div class="pg-mini mt-2">
+              <i class="bi bi-lightning-charge"></i>
+              The highlight moves automatically to show what PhishGuard is doing step-by-step.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOTS (aligned + zoom modal) -->
+  <div class="pg-card">
+    <div class="pg-card-header px-3 py-3">
+      <div class="pg-section-title"><i class="bi bi-images"></i> Demo Screenshots</div>
+      <div class="pg-mini">Click any screenshot to zoom.</div>
+    </div>
+
+    <div class="p-3">
+      <div class="shotsGrid">
+
+        <div class="shotCard" data-title="PhishGuard Security Dashboard" data-img="{{ url_for('static', filename='Phishguard Dash.png') }}">
+          <div class="shotImgWrap">
+            <img src="{{ url_for('static', filename='Phishguard Dash.png') }}" alt="PhishGuard Dashboard Screenshot">
+          </div>
+          <div class="shotBody">
+            <div>
+              <div class="shotTitle">PhishGuard Security Dashboard</div>
+              <p class="shotMeta">Unified view: ingestion, verdict, intel results, and case access.</p>
+            </div>
+            <div class="shotBadge">UI</div>
+          </div>
+        </div>
+
+        <div class="shotCard" data-title="Wazuh Alerts & Investigation" data-img="{{ url_for('static', filename='Wazuh dash.png') }}">
+          <div class="shotImgWrap">
+            <img src="{{ url_for('static', filename='Wazuh dash.png') }}" alt="Wazuh Screenshot">
+          </div>
+          <div class="shotBody">
+            <div>
+              <div class="shotTitle">Wazuh Alerts & Investigation</div>
+              <p class="shotMeta">Central monitoring for phishing events and investigation timelines.</p>
+            </div>
+            <div class="shotBadge">SIEM</div>
+          </div>
+        </div>
+
+        <div class="shotCard" data-title="Shuffle SOAR Workflow" data-img="{{ url_for('static', filename='Shuffle workflow.png') }}">
+          <div class="shotImgWrap">
+            <img src="{{ url_for('static', filename='Shuffle workflow.png') }}" alt="Shuffle Workflow Screenshot">
+          </div>
+          <div class="shotBody">
+            <div>
+              <div class="shotTitle">Shuffle SOAR Workflow</div>
+              <p class="shotMeta">Automated playbook that sends notifications and response actions.</p>
+            </div>
+            <div class="shotBadge">SOAR</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    PhishGuard • SIEM + SOAR Integrations • SOC-ready dashboard
+  </div>
+
+</div>
+
+<!-- Zoom Modal -->
+<div class="modal fade" id="zoomModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" style="border-radius:18px; overflow:hidden;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="zoomTitle">Screenshot</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <img id="zoomImg" src="" alt="Zoomed screenshot" style="width:100%; height:auto; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Step highlighter (much clearer than a tiny dot)
+  const steps = Array.from(document.querySelectorAll('#flowSteps .flowStep'));
+  let idx = 0;
+
+  function setActive(i){
+    steps.forEach(s => s.classList.remove('active'));
+    const el = steps[i % steps.length];
+    if(el) el.classList.add('active');
+  }
+
+  setActive(0);
+  setInterval(() => {
+    idx = (idx + 1) % steps.length;
+    setActive(idx);
+  }, 1400);
+
+  // Screenshot click-to-zoom
+  const modalEl = document.getElementById('zoomModal');
+  const zoomModal = new bootstrap.Modal(modalEl);
+  const zoomImg = document.getElementById('zoomImg');
+  const zoomTitle = document.getElementById('zoomTitle');
+
+  document.querySelectorAll('.shotCard').forEach(card => {
+    card.addEventListener('click', () => {
+      zoomTitle.textContent = card.getAttribute('data-title') || 'Screenshot';
+      zoomImg.src = card.getAttribute('data-img') || '';
+      zoomModal.show();
+    });
+  });
+</script>
+
+</body>
+</html>

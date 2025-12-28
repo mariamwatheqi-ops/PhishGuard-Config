@@ -1,0 +1,2 @@
+Command 'nginx' not found, but can be installed with:
+sudo apt install nginx
