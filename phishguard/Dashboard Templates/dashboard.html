@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ page_title }}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root{
+      --pg-white: rgba(255,255,255,.92);
+      --pg-border: rgba(0,0,0,.10);
+      --pg-text: rgba(0,0,0,.86);
+      --pg-muted: rgba(0,0,0,.55);
+
+      --pg-neon-blue: #3aa0ff;
+      --pg-neon-purple: #7c5cff;
+      --pg-neon-green: #25dba1;
+      --pg-neon-yellow: #ffcf5a;
+      --pg-neon-red: #ff4d6d;
+
+      --pg-radius: 18px;
+      --pg-shadow: 0 14px 34px rgba(0,0,0,.12);
+    }
+
+    .pg-topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(255,255,255,.58);
+      border-bottom: 1px solid rgba(255,255,255,.35);
+      box-shadow: 0 10px 28px rgba(0,0,0,.10);
+    }
+
+    .pg-brand{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+      min-width: 260px;
+    }
+    .pg-brand img{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      box-shadow:
+        0 0 0 3px rgba(255,255,255,.55),
+        0 10px 24px rgba(0,0,0,.16),
+        0 0 22px rgba(58,160,255,.25);
+    }
+    .pg-brand-title{ line-height: 1.08; }
+    .pg-brand-title .name{
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: var(--pg-text);
+    }
+    .pg-brand-title .sub{
+      font-size: .86rem;
+      color: var(--pg-muted);
+    }
+
+    .tool-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      font-weight: 800;
+      color: rgba(0,0,0,.72);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .tool-dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display:inline-block;
+      background: var(--pg-neon-blue);
+      box-shadow: 0 0 0 5px rgba(58,160,255,.10);
+    }
+    .tool-dot.vt{ background: var(--pg-neon-yellow); box-shadow: 0 0 0 5px rgba(255,207,90,.14); }
+    .tool-dot.shuffle{ background: var(--pg-neon-purple); box-shadow: 0 0 0 5px rgba(124,92,255,.14); }
+    .tool-dot.wazuh{ background: var(--pg-neon-blue); box-shadow: 0 0 0 5px rgba(58,160,255,.14); }
+    .tool-dot.misp{ background: var(--pg-neon-green); box-shadow: 0 0 0 5px rgba(37,219,161,.14); }
+
+    /* ✅ NAV WRAP FIX: keep one line, allow horizontal scroll on smaller widths */
+    .pg-nav-strip{
+      display:flex;
+      gap:.5rem;
+      flex-wrap: nowrap;
+      align-items:center;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+    .pg-nav-strip::-webkit-scrollbar{ height: 6px; }
+    .pg-nav-strip::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.15); border-radius: 10px; }
+    .pg-nav-strip .btn{ white-space: nowrap; flex: 0 0 auto; }
+
+    .pg-card{
+      background: var(--pg-white);
+      border: 1px solid rgba(255,255,255,.45);
+      border-radius: var(--pg-radius);
+      box-shadow: var(--pg-shadow);
+      position: relative;
+      overflow: hidden;
+      height: auto;
+    }
+
+    .pg-card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius: calc(var(--pg-radius) + 2px);
+      padding: 2px;
+      background: linear-gradient(135deg,
+        rgba(58,160,255,.55),
+        rgba(124,92,255,.45),
+        rgba(37,219,161,.35)
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events:none;
+      opacity: .55;
+    }
+
+    .pg-card-header{
+      background: rgba(255,255,255,.60);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      border-top-left-radius: var(--pg-radius);
+      border-top-right-radius: var(--pg-radius);
+    }
+
+    .pg-mini{
+      font-size: .92rem;
+      color: var(--pg-muted);
+    }
+
+    .pg-section-title{
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: var(--pg-text);
+    }
+
+    .timestamp{
+      color: rgba(0,0,0,.58);
+      font-size: .92rem;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .metric-row{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 992px){
+      .metric-row{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 576px){
+      .metric-row{ grid-template-columns: 1fr; }
+    }
+
+    .metric{
+      background: rgba(255,255,255,.66);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height: 74px;
+      position: relative;
+      overflow:hidden;
+    }
+
+    .metric::after{
+      content:"";
+      position:absolute;
+      inset:-40px -60px auto auto;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(58,160,255,.12), transparent 62%);
+      transform: rotate(15deg);
+      pointer-events:none;
+    }
+
+    .metric .k{
+      font-size: .86rem;
+      color: rgba(0,0,0,.62);
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .metric .v{
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: rgba(0,0,0,.88);
+      line-height: 1.05;
+    }
+    .metric .ico{
+      font-size: 1.35rem;
+      color: rgba(0,0,0,.55);
+    }
+
+    .dot{
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display:inline-block;
+      background: var(--pg-neon-blue);
+      box-shadow: 0 0 0 4px rgba(58,160,255,.10);
+      flex: 0 0 auto;
+    }
+    .dot.vt{ background: var(--pg-neon-yellow); box-shadow: 0 0 0 4px rgba(255,207,90,.14); }
+    .dot.siem{ background: var(--pg-neon-green); box-shadow: 0 0 0 4px rgba(37,219,161,.14); }
+    .dot.soar{ background: var(--pg-neon-purple); box-shadow: 0 0 0 4px rgba(124,92,255,.14); }
+
+    .flow-panel{
+      margin-top: 12px;
+      background: rgba(255,255,255,.60);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .flow-panel::after{
+      content:"";
+      position:absolute;
+      top:-60px; right:-70px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(124,92,255,.16), transparent 60%);
+      transform: rotate(18deg);
+      pointer-events:none;
+    }
+
+    .flow-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .flow-steps{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+    @media (max-width: 1200px){
+      .flow-steps{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 576px){
+      .flow-steps{ grid-template-columns: 1fr; }
+    }
+
+    .step{
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.72);
+      border-radius: 16px;
+      padding: 10px 10px;
+      position: relative;
+      overflow: hidden;
+      min-height: 74px;
+    }
+    .step::before{
+      content:"";
+      position:absolute;
+      inset:-40px auto auto -60px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(58,160,255,.11), transparent 60%);
+      pointer-events:none;
+    }
+
+    .step .t{
+      font-weight: 900;
+      font-size: .95rem;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      color: rgba(0,0,0,.82);
+      margin-bottom: 3px;
+    }
+    .step .d{
+      margin:0;
+      font-size: .86rem;
+      color: rgba(0,0,0,.62);
+      line-height: 1.25;
+    }
+
+    .signal-track{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(58,160,255,.16);
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.08);
+      position: relative;
+      margin-top: 10px;
+    }
+    .signal-dot{
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(58,160,255,.95);
+      box-shadow: 0 0 0 10px rgba(58,160,255,.12);
+      animation: runSignal 6s linear infinite;
+    }
+    @keyframes runSignal{
+      0% { left: -20px; opacity: 0; }
+      5% { opacity: 1; }
+      95% { opacity: 1; }
+      100% { left: calc(100% + 20px); opacity: 0; }
+    }
+
+    .nav-tabs{ border-bottom: 1px solid rgba(0,0,0,.08); }
+    .nav-tabs .nav-link{
+      color: rgba(0,0,0,.65);
+      border: 1px solid transparent;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+      font-weight: 900;
+    }
+    .nav-tabs .nav-link.active{
+      background: rgba(255,255,255,.70);
+      border-color: rgba(0,0,0,.08);
+      color: rgba(0,0,0,.86);
+      box-shadow: 0 12px 22px rgba(0,0,0,.08);
+    }
+
+    .table{ color: rgba(0,0,0,.88); margin-bottom: 0; }
+    .table thead th{
+      background: rgba(0,0,0,.03);
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+    .table td, .table th{ border-color: rgba(0,0,0,.08) !important; }
+    .table-hover tbody tr:hover{ background: rgba(58,160,255,.06); }
+    tr.phishing td{ background: rgba(255,77,109,.07); }
+    tr.safe td{ background: rgba(37,219,161,.06); }
+
+    .accordion-item{
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px !important;
+      overflow: hidden;
+    }
+    .accordion-button{
+      background: rgba(255,255,255,.62);
+      color: rgba(0,0,0,.85);
+      font-weight: 900;
+    }
+    .accordion-button:not(.collapsed){
+      background: rgba(58,160,255,.10);
+      color: rgba(0,0,0,.90);
+    }
+
+    .user-chip{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.65);
+      box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .user-chip .icon{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(58,160,255,.12);
+    }
+    .user-chip .meta{
+      line-height: 1.1;
+      text-align:left;
+    }
+    .user-chip .meta .u{
+      font-weight: 900;
+      color: rgba(0,0,0,.86);
+      font-size: .95rem;
+    }
+    .user-chip .meta .r{
+      font-size: .82rem;
+      color: rgba(0,0,0,.55);
+      font-weight: 800;
+    }
+
+    /* Make topbar layout more stable */
+    .pg-topbar-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    @media (min-width: 1200px){
+      .pg-topbar-inner{ flex-wrap: nowrap; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="pg-topbar py-3">
+  <div class="container-fluid px-4">
+    <div class="pg-topbar-inner">
+
+      <div class="pg-brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="PhishGuard Logo">
+        <div class="pg-brand-title">
+          <div class="name">{{ page_title }}</div>
+          <div class="sub">Security Operations Dashboard • SIEM + SOAR integrations</div>
+        </div>
+      </div>
+
+      <!-- tools: keep in one line, scroll if needed -->
+      <div class="pg-nav-strip" aria-label="tools">
+        <span class="tool-pill"><span class="tool-dot vt"></span><i class="bi bi-shield-check"></i> VirusTotal</span>
+        <span class="tool-pill"><span class="tool-dot misp"></span><i class="bi bi-database-check"></i> MISP</span>
+        <span class="tool-pill"><span class="tool-dot wazuh"></span><i class="bi bi-broadcast"></i> Wazuh</span>
+        <span class="tool-pill"><span class="tool-dot shuffle"></span><i class="bi bi-lightning-charge"></i> Shuffle</span>
+      </div>
+
+      <!-- NAV + USER (✅ no wrap, scroll if needed) -->
+      <div class="pg-nav-strip" aria-label="navigation">
+        <a href="/" class="btn btn-sm btn-outline-secondary"><i class="bi bi-house-door"></i> Home</a>
+        <a href="/about" class="btn btn-sm btn-outline-info"><i class="bi bi-info-circle"></i> About</a>
+        <a href="/upload" class="btn btn-sm btn-outline-primary"><i class="bi bi-cloud-arrow-up"></i> Upload</a>
+        <a href="/inbox" class="btn btn-sm btn-outline-success"><i class="bi bi-inboxes"></i> Inbox Monitor</a>
+        <a href="/history" class="btn btn-sm btn-outline-dark"><i class="bi bi-clock-history"></i> My History</a>
+        <a href="/logout" class="btn btn-sm btn-outline-warning"><i class="bi bi-box-arrow-right"></i> Logout</a>
+
+        <div class="user-chip ms-1">
+          <div class="icon"><i class="bi bi-person-fill"></i></div>
+          <div class="meta">
+            <div class="u">{{ session.get("user") }}</div>
+            <div class="r">Role: {{ session.get("role") }}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid px-4 py-4">
+
+  <div class="row g-3 mb-3 align-items-start">
+
+    <div class="col-12 col-xl-8">
+      <div class="pg-card">
+        <div class="pg-card-header px-3 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <div class="pg-section-title"><i class="bi bi-activity"></i> Security Operations Dashboard</div>
+            <div class="pg-mini">Live view of phishing detections, enrichment, and alert forwarding.</div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <span class="badge text-bg-success"><i class="bi bi-check2-circle"></i> Services Online</span>
+            <div id="timestamp" class="timestamp">Last updated: —</div>
+          </div>
+        </div>
+
+        <div class="p-3">
+          <div class="metric-row">
+            <div class="metric">
+              <div>
+                <div class="k"><span class="dot"></span> Pipeline</div>
+                <div class="v">Active</div>
+              </div>
+              <div class="ico"><i class="bi bi-diagram-3"></i></div>
+            </div>
+
+            <div class="metric">
+              <div>
+                <div class="k"><span class="dot vt"></span> VT Enrichment</div>
+                <div class="v">On-Demand</div>
+              </div>
+              <div class="ico"><i class="bi bi-shield-check"></i></div>
+            </div>
+
+            <div class="metric">
+              <div>
+                <div class="k"><span class="dot siem"></span> SIEM Forwarding</div>
+                <div class="v">Wazuh</div>
+              </div>
+              <div class="ico"><i class="bi bi-broadcast"></i></div>
+            </div>
+
+            <div class="metric">
+              <div>
+                <div class="k"><span class="dot soar"></span> SOAR Actions</div>
+                <div class="v">Shuffle</div>
+              </div>
+              <div class="ico"><i class="bi bi-lightning-charge"></i></div>
+            </div>
+          </div>
+
+          <div class="flow-panel">
+            <div class="flow-title">
+              <div>
+                <div class="pg-section-title"><i class="bi bi-diagram-3"></i> How PhishGuard Works</div>
+                <div class="pg-mini">Ingest → Extract → ML → Enrich → SIEM → SOAR Response</div>
+              </div>
+              <span class="badge text-bg-primary"><i class="bi bi-play-circle"></i> Live Flow</span>
+            </div>
+
+            <div class="flow-steps">
+              <div class="step">
+                <div class="t"><i class="bi bi-inboxes"></i> Ingest</div>
+                <p class="d">Upload .eml or monitor inbox (IMAP).</p>
+              </div>
+              <div class="step">
+                <div class="t"><i class="bi bi-funnel"></i> Extract</div>
+                <p class="d">Pull URLs/domains/sender signals.</p>
+              </div>
+              <div class="step">
+                <div class="t"><i class="bi bi-cpu"></i> ML Classify</div>
+                <p class="d">Predict phishing vs safe.</p>
+              </div>
+              <div class="step">
+                <div class="t"><i class="bi bi-shield-check"></i> VirusTotal</div>
+                <p class="d">Score URLs with reputation intel.</p>
+              </div>
+              <div class="step">
+                <div class="t"><i class="bi bi-database-check"></i> MISP</div>
+                <p class="d">Check IOC history & sightings.</p>
+              </div>
+              <div class="step">
+                <div class="t"><i class="bi bi-broadcast"></i> SIEM + SOAR</div>
+                <p class="d">Wazuh logs + Shuffle playbooks/email alerts.</p>
+              </div>
+            </div>
+
+            <div class="signal-track">
+              <span class="signal-dot" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div class="mt-3 pg-mini">
+            <i class="bi bi-info-circle"></i>
+            Tip: Use <b>Upload</b> to test .eml files, or <b>Inbox Monitor</b> for automated ingestion.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+      <div class="pg-card">
+        <div class="pg-card-header px-3 py-3">
+          <div class="pg-section-title"><i class="bi bi-book"></i> About + Integrations</div>
+          <div class="pg-mini">What each tool does inside PhishGuard + quick docs.</div>
+        </div>
+        <div class="p-3">
+          <div class="accordion" id="aboutIntegrations">
+
+            <div class="accordion-item mb-2">
+              <h2 class="accordion-header" id="ai-heading-0">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#ai-collapse-0" aria-expanded="true" aria-controls="ai-collapse-0">
+                  <i class="bi bi-shield-lock me-2"></i> A) What is PhishGuard?
+                </button>
+              </h2>
+              <div id="ai-collapse-0" class="accordion-collapse collapse show" aria-labelledby="ai-heading-0" data-bs-parent="#aboutIntegrations">
+                <div class="accordion-body">
+                  <div class="mb-2">
+                    <b>PhishGuard</b> is a cloud-based phishing detection and response platform. It analyzes emails, extracts suspicious indicators (URLs, sender patterns, content signals), classifies them using an ML model, enriches findings using threat intelligence, and then pushes alerts to security tools for monitoring and response.
+                  </div>
+                  <div class="mb-2">
+                    <b>Main goal:</b> automate phishing detection + speed up incident response for SMEs.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item mb-2">
+              <h2 class="accordion-header" id="ai-heading-1">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ai-collapse-1" aria-expanded="false" aria-controls="ai-collapse-1">
+                  <i class="bi bi-lightning-charge me-2"></i> B) What is Shuffle (SOAR)?
+                </button>
+              </h2>
+              <div id="ai-collapse-1" class="accordion-collapse collapse" aria-labelledby="ai-heading-1" data-bs-parent="#aboutIntegrations">
+                <div class="accordion-body">
+                  <div class="mb-2">
+                    <b>Shuffle</b> automates response actions after detection:
+                  </div>
+                  <ul class="mb-3">
+                    <li>incident workflow creation</li>
+                    <li><b>email alerts</b> to SOC analysts / SMEs</li>
+                    <li>Slack/Teams notifications</li>
+                    <li>playbooks (block URL, quarantine, ticket creation)</li>
+                  </ul>
+                  <a class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener" href="https://shuffler.io/docs/about">
+                    <i class="bi bi-box-arrow-up-right"></i> Shuffle Docs
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item mb-2">
+              <h2 class="accordion-header" id="ai-heading-2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ai-collapse-2" aria-expanded="false" aria-controls="ai-collapse-2">
+                  <i class="bi bi-shield-check me-2"></i> C) VirusTotal (VT)
+                </button>
+              </h2>
+              <div id="ai-collapse-2" class="accordion-collapse collapse" aria-labelledby="ai-heading-2" data-bs-parent="#aboutIntegrations">
+                <div class="accordion-body">
+                  <div class="mb-2">
+                    <b>VirusTotal</b> checks if a URL/domain is already known as <b>malicious</b> or <b>clean</b>.
+                  </div>
+                  <div class="mb-2">
+                    <b>Results:</b> 🟢 Clean / ⚠️ Malicious / ⏳ Pending.
+                  </div>
+                  <a class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener" href="https://docs.virustotal.com/reference/overview">
+                    <i class="bi bi-box-arrow-up-right"></i> VT API Docs
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item mb-2">
+              <h2 class="accordion-header" id="ai-heading-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ai-collapse-3" aria-expanded="false" aria-controls="ai-collapse-3">
+                  <i class="bi bi-broadcast me-2"></i> D) Wazuh (SIEM/XDR)
+                </button>
+              </h2>
+              <div id="ai-collapse-3" class="accordion-collapse collapse" aria-labelledby="ai-heading-3" data-bs-parent="#aboutIntegrations">
+                <div class="accordion-body">
+                  <div class="mb-2">
+                    <b>Wazuh</b> is the security “control room” where alerts are stored and investigated.
+                  </div>
+                  <div class="mb-2">
+                    <b>You see:</b> alerts, timelines, and dashboards.
+                  </div>
+                  <a class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener" href="https://documentation.wazuh.com/current/">
+                    <i class="bi bi-box-arrow-up-right"></i> Wazuh Docs
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="ai-heading-4">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ai-collapse-4" aria-expanded="false" aria-controls="ai-collapse-4">
+                  <i class="bi bi-database-check me-2"></i> E) MISP
+                </button>
+              </h2>
+              <div id="ai-collapse-4" class="accordion-collapse collapse" aria-labelledby="ai-heading-4" data-bs-parent="#aboutIntegrations">
+                <div class="accordion-body">
+                  <div class="mb-2">
+                    <b>MISP</b> checks if an IOC was seen before and returns context (tags/sightings).
+                  </div>
+                  <div class="mb-2">
+                    <b>IOC = Indicator of Compromise</b> (a suspicious clue like a malicious URL, domain, IP, hash, or sender).
+                  </div>
+                  <div class="mb-2">
+                    <b>Results:</b> ✔️ Seen in MISP / ❌ Not found.
+                  </div>
+                  <a class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener" href="https://www.misp-project.org/documentation/">
+                    <i class="bi bi-box-arrow-up-right"></i> MISP Docs
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% if show_upload_form %}
+  <div class="pg-card mb-3">
+    <div class="pg-card-header px-3 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="pg-section-title"><i class="bi bi-cloud-arrow-up"></i> Upload an Email File (.eml)</div>
+      <div class="pg-mini">Manual testing for phishing detection + enrichment</div>
+    </div>
+    <div class="p-3">
+      <form action="{{ url_for('upload_eml') }}" method="POST" enctype="multipart/form-data">
+        <div class="input-group">
+          <input type="file" name="eml_file" accept=".eml" class="form-control" required>
+          <button class="btn btn-primary"><i class="bi bi-upload"></i> Upload</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="pg-card">
+    <div class="pg-card-header px-3 py-3">
+      <ul class="nav nav-tabs" id="pgTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="emails-tab" data-bs-toggle="tab"
+                  data-bs-target="#emails-pane" type="button" role="tab">
+            <i class="bi bi-envelope-check"></i> Email Analysis
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="wazuh-tab" data-bs-toggle="tab"
+                  data-bs-target="#wazuh-pane" type="button" role="tab">
+            <i class="bi bi-shield-exclamation"></i> Wazuh Alerts
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tab-content" id="pgTabsContent">
+
+      <div class="tab-pane fade show active" id="emails-pane" role="tabpanel" aria-labelledby="emails-tab">
+        <div class="p-3">
+          <div class="pg-mini mb-2">
+            <i class="bi bi-search"></i> Results show ML label + VT/MISP enrichment. Newest appears at the top.
+          </div>
+          <div id="email-results" class="table-container"></div>
+        </div>
+      </div>
+
+      <!-- WAZUH TAB: keep iframe and buttons -->
+      <div class="tab-pane fade" id="wazuh-pane" role="tabpanel" aria-labelledby="wazuh-tab">
+        <div class="p-3">
+
+          <div class="d-flex gap-2 mb-3 flex-wrap">
+            <a class="btn btn-dark" target="_blank" rel="noopener"
+               href="https://44.205.35.72/wazuh/app/endpoints-summary#/agents?tab=welcome&agent=002">
+              🔎 Open Agent 002 (New Tab)
+            </a>
+
+            <a class="btn btn-outline-secondary" target="_blank" rel="noopener"
+               href="https://44.205.35.72/wazuh/app/wz-home#/overview/?agentId=002&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-24h,to:now))&_a=(filters:!(),query:(language:kuery,query:''))">
+              🏠 Open Wazuh Home (Agent 002)
+            </a>
+          </div>
+
+          <div class="mt-3" style="height: 82vh; border:1px solid #ddd; border-radius:12px; overflow:hidden;">
+            <iframe
+                src="{{ wazuh_iframe_url }}"
+                style="width:100%; height:100%; border:0;"
+                allow="clipboard-read; clipboard-write"
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-downloads allow-top-navigation-by-user-activation"
+                referrerpolicy="no-referrer">
+            </iframe>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="text-center pg-mini mt-4 mb-2">
+    PhishGuard • SIEM + SOAR Integrations • SOC-ready dashboard
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const DATA_ENDPOINT = "{{ data_endpoint }}";
+
+  function loadEmails() {
+    fetch(DATA_ENDPOINT + "?" + new Date().getTime())
+      .then(r => r.json())
+      .then(data => {
+        const now = new Date();
+        const ts = document.getElementById("timestamp");
+        if (ts) ts.innerText = "Last updated: " + now.toLocaleString();
+        updateEmailTable(data.emails);
+      })
+      .catch(err => {
+        console.error(err);
+        const er = document.getElementById("email-results");
+        if (er) er.innerHTML = "<p class='text-muted'>Error loading email data.</p>";
+      });
+  }
+
+  function safeText(x){
+    return (x === null || x === undefined) ? "—" : String(x);
+  }
+
+  function updateEmailTable(data) {
+    const container = document.getElementById('email-results');
+    if (!data || data.length === 0) {
+      container.innerHTML = "<p class='text-muted'>No emails processed yet.</p>";
+      return;
+    }
+
+    let html = `
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Label</th>
+              <th>VirusTotal</th>
+              <th>MISP</th>
+              {% if show_upload_form %}
+              <th>S3 File</th>
+              {% endif %}
+              <th>Case</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    data.slice().reverse().forEach(item => {
+      const labelText = item.label === 1 ? "Phishing" : "Safe";
+      const rowClass = item.label === 1 ? "phishing" : "safe";
+
+      const vtList = item.virustotal || [];
+      let vt = vtList.length === 0 ? "⏳ Pending VT scan" :
+        vtList.map(v => {
+          const url = v.url ? `<a href="${v.url}" target="_blank" rel="noopener">${v.url}</a>` : "(no url)";
+          return `${v.malicious ? "⚠️ Malicious" : "🟢 Clean"} — ${url}`;
+        }).join("<br>");
+
+      const mispList = item.misp || [];
+      let mispHtml = (mispList.length > 0 && mispList[0].found) ? "✔️ Seen in MISP" : "❌ Not found";
+
+      const caseBtn = item.detection_id
+        ? `<a class="btn btn-sm btn-primary" href="/case/${item.detection_id}"><i class="bi bi-folder2-open"></i> View</a>`
+        : "—";
+
+      html += `
+        <tr class="${rowClass}">
+          <td>${safeText(item.subject)}</td>
+          <td><span class="badge ${item.label === 1 ? "text-bg-danger" : "text-bg-success"}">${labelText}</span></td>
+          <td>${vt}</td>
+          <td>${mispHtml}</td>
+          {% if show_upload_form %}
+          <td>${item.s3_path ? `<a href="${item.s3_path}" target="_blank" rel="noopener">Download</a>` : "—"}</td>
+          {% endif %}
+          <td>${caseBtn}</td>
+          <td>${safeText(item.timestamp)}</td>
+        </tr>
+      `;
+    });
+
+    html += "</tbody></table></div>";
+    container.innerHTML = html;
+  }
+
+  loadEmails();
+  setInterval(loadEmails, 8000);
+</script>
+
+</body>
+</html>
