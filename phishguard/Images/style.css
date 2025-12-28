@@ -1,0 +1,165 @@
+/* ===============================
+   GLOBAL PAGE STYLING
+================================== */
+body {
+    background-color: #f4f7fa;
+    padding: 2rem;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #003b64;
+}
+
+/* ===============================
+   LOGO STYLES
+================================== */
+
+/* Landing page large logo */
+.WelcomeLogo {
+    width: 240px;             /* bigger logo */
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;      /* round corners */
+    background-color: #f4f7fa; /* match page background */
+    padding: 10px;            
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Dashboard small logo */
+.logo {
+    width: 80px;
+    height: auto;
+    margin-right: 15px;
+}
+
+/* ===============================
+   HEADER STYLING
+================================== */
+
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    color: #003b64;
+    font-weight: 700;
+}
+
+/* ===============================
+   NAVIGATION BUTTONS
+================================== */
+
+.nav .btn {
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.nav .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+}
+
+/* ===============================
+   UPLOAD CARD
+================================== */
+
+.upload-card {
+    max-width: 650px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   TABLE STYLING
+================================== */
+
+.table-container {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.table tbody tr td {
+    vertical-align: middle;
+}
+
+/* Colors for phishing/safe rows */
+.phishing {
+    background-color: #fde2e4 !important;
+}
+
+.safe {
+    background-color: #d6f5d6 !important;
+}
+
+/* ===============================
+   TIMESTAMP
+================================== */
+
+.timestamp {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+/* ===============================
+   BUTTONS GENERAL
+================================== */
+
+button, .btn {
+    border-radius: 10px;
+    transition: 0.25s ease-in-out;
+}
+
+button:hover, .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* ===============================
+   FADE IN ANIMATION
+================================== */
+
+.fade-in {
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-8px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================== */
+
+@media (max-width: 768px) {
+
+    .WelcomeLogo {
+        width: 180px;
+    }
+
+    .nav .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        margin: 0 auto 10px auto;
+    }
+}
