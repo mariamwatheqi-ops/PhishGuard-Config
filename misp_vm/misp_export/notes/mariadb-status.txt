@@ -1,0 +1,28 @@
+● mariadb.service - MariaDB 10.11.13 database server
+     Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2025-12-28 16:30:15 UTC; 1h 45min ago
+       Docs: man:mariadbd(8)
+             https://mariadb.com/kb/en/library/systemd/
+    Process: 562 ExecStartPre=/usr/bin/install -m 755 -o mysql -g root -d /var/run/mysqld (code=exited, status=0/SUCCESS)
+    Process: 645 ExecStartPre=/bin/sh -c systemctl unset-environment _WSREP_START_POSITION (code=exited, status=0/SUCCESS)
+    Process: 823 ExecStartPre=/bin/sh -c [ ! -e /usr/bin/galera_recovery ] && VAR= ||   VAR=`/usr/bin/galera_recovery`; [ $? -eq 0 ]   && systemctl set-environment _WSREP_START_POSITION=$VAR || exit 1 (code=exited, status=0/SUCCESS)
+    Process: 998 ExecStartPost=/bin/sh -c systemctl unset-environment _WSREP_START_POSITION (code=exited, status=0/SUCCESS)
+    Process: 1000 ExecStartPost=/etc/mysql/debian-start (code=exited, status=0/SUCCESS)
+   Main PID: 932 (mariadbd)
+     Status: "Taking your SQL requests now..."
+      Tasks: 10 (limit: 14609)
+     Memory: 365.2M (peak: 366.2M)
+        CPU: 2.277s
+     CGroup: /system.slice/mariadb.service
+             └─932 /usr/sbin/mariadbd
+
+Dec 28 16:30:15 ip-172-31-66-140 mariadbd[932]: 2025-12-28 16:30:15 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+Dec 28 16:30:15 ip-172-31-66-140 mariadbd[932]: 2025-12-28 16:30:15 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+Dec 28 16:30:15 ip-172-31-66-140 mariadbd[932]: 2025-12-28 16:30:15 0 [Note] Server socket created on IP: '127.0.0.1'.
+Dec 28 16:30:15 ip-172-31-66-140 mariadbd[932]: 2025-12-28 16:30:15 0 [Note] /usr/sbin/mariadbd: ready for connections.
+Dec 28 16:30:15 ip-172-31-66-140 mariadbd[932]: Version: '10.11.13-MariaDB-0ubuntu0.24.04.1'  socket: '/run/mysqld/mysqld.sock'  port: 3306  Ubuntu 24.04
+Dec 28 16:30:15 ip-172-31-66-140 systemd[1]: Started mariadb.service - MariaDB 10.11.13 database server.
+Dec 28 16:30:15 ip-172-31-66-140 /etc/mysql/debian-start[1004]: Upgrading MariaDB tables if necessary.
+Dec 28 16:30:15 ip-172-31-66-140 /etc/mysql/debian-start[1119]: Checking for insecure root accounts.
+Dec 28 16:30:15 ip-172-31-66-140 /etc/mysql/debian-start[1134]: Triggering myisam-recover for all MyISAM tables and aria-recover for all Aria tables
+Dec 28 16:30:19 ip-172-31-66-140 mariadbd[932]: 2025-12-28 16:30:19 0 [Note] InnoDB: Buffer pool(s) load completed at 251228 16:30:19
