@@ -1,0 +1,30 @@
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2025-12-28 16:30:21 UTC; 1h 23min ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 826 (dockerd)
+      Tasks: 119
+     Memory: 245.7M (peak: 321.7M swap: 2.9M swap peak: 2.9M)
+        CPU: 1min 13.486s
+     CGroup: /system.slice/docker.service
+             ├─ 826 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+             ├─1397 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 9200 -container-ip 172.18.0.2 -container-port 9200 -use-listen-fd
+             ├─1413 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 9200 -container-ip 172.18.0.2 -container-port 9200 -use-listen-fd
+             ├─1440 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 3001 -container-ip 172.18.0.4 -container-port 80 -use-listen-fd
+             ├─1454 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 3001 -container-ip 172.18.0.4 -container-port 80 -use-listen-fd
+             ├─1475 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 3443 -container-ip 172.18.0.4 -container-port 443 -use-listen-fd
+             ├─1483 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 3443 -container-ip 172.18.0.4 -container-port 443 -use-listen-fd
+             ├─1507 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 5001 -container-ip 172.18.0.5 -container-port 5001 -use-listen-fd
+             └─1515 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 5001 -container-ip 172.18.0.5 -container-port 5001 -use-listen-fd
+
+Dec 28 17:51:50 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:50.929759789Z" level=info msg="sbJoin: gwep4 '3a40194602d9'->'3a40194602d9', gwep6 ''->''" eid=4611775e7f20 ep=email_1-3-0.1.5do8jhry2mkwvswto9qx6x3fx net=ingress nid=5nqg0ml6qqwd
+Dec 28 17:51:50 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:50.955950048Z" level=info msg="sbJoin: gwep4 ''->'634463e27047', gwep6 ''->''" eid=634463e27047 ep=gateway_349c5d479937 net=docker_gwbridge nid=0a75b06f5948
+Dec 28 17:51:50 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:50.971408438Z" level=info msg="sbJoin: gwep4 ''->'634463e27047', gwep6 ''->''" eid=d77390e207a8 ep=email_1-3-0.2.bwfxtsjx141sulj9vu79o9ph1 net=ingress nid=5nqg0ml6qqwd
+Dec 28 17:51:51 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:51.143395816Z" level=info msg="sbJoin: gwep4 '634463e27047'->'634463e27047', gwep6 ''->''" eid=a692f7279595 ep=email_1-3-0.2.bwfxtsjx141sulj9vu79o9ph1 net=shuffle_swarm_executions nid=vx9iu72htjzr
+Dec 28 17:51:52 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:52.162884817Z" level=info msg="sbJoin: gwep4 ''->'44cdf877b738', gwep6 ''->''" eid=44cdf877b738 ep=gateway_4a3976849581 net=docker_gwbridge nid=0a75b06f5948
+Dec 28 17:51:52 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:52.265143118Z" level=info msg="sbJoin: gwep4 ''->'44cdf877b738', gwep6 ''->''" eid=8ef4c2ec4865 ep=shuffle-subflow_1-1-0.3.t4h8s3vlos5w8gxzv4yhirlb0 net=ingress nid=5nqg0ml6qqwd
+Dec 28 17:51:52 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:52.266304453Z" level=info msg="sbJoin: gwep4 ''->'2e2a0478a4a6', gwep6 ''->''" eid=2e2a0478a4a6 ep=gateway_9d156865e025 net=docker_gwbridge nid=0a75b06f5948
+Dec 28 17:51:52 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:52.316511669Z" level=info msg="sbJoin: gwep4 ''->'2e2a0478a4a6', gwep6 ''->''" eid=cc6d52422f71 ep=shuffle-subflow_1-1-0.2.re7o7xyp1pgo227j2vk7cf9h6 net=ingress nid=5nqg0ml6qqwd
+Dec 28 17:51:52 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:52.351516468Z" level=info msg="sbJoin: gwep4 '44cdf877b738'->'44cdf877b738', gwep6 ''->''" eid=b5eca81fe3de ep=shuffle-subflow_1-1-0.3.t4h8s3vlos5w8gxzv4yhirlb0 net=shuffle_swarm_executions nid=vx9iu72htjzr
+Dec 28 17:51:52 ip-172-31-72-137 dockerd[826]: time="2025-12-28T17:51:52.358392633Z" level=info msg="sbJoin: gwep4 '2e2a0478a4a6'->'2e2a0478a4a6', gwep6 ''->''" eid=ef08031030c4 ep=shuffle-subflow_1-1-0.2.re7o7xyp1pgo227j2vk7cf9h6 net=shuffle_swarm_executions nid=vx9iu72htjzr

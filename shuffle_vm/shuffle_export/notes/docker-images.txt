@@ -1,0 +1,12 @@
+IMAGE                                     ID             DISK USAGE   CONTENT SIZE   EXTRA
+alpine:3.19                               6baf43584bcb       11.6MB         3.51MB        
+frikky/shuffle:app_sdk                    c9fe071ef11b        493MB          127MB        
+frikky/shuffle:email_1.3.0                6c7ee2e7abe2        503MB          129MB   U    
+frikky/shuffle:http_1.4.0                 4e1753e386cc        502MB          130MB   U    
+frikky/shuffle:shuffle-subflow_1.1.0      332de7b28044        494MB          127MB   U    
+frikky/shuffle:shuffle-tools_1.2.0        ce250907cb3b        649MB          160MB   U    
+ghcr.io/shuffle/shuffle-backend:latest    2ea9d7065352        176MB         51.7MB   U    
+ghcr.io/shuffle/shuffle-frontend:latest   6f764723458e        365MB         98.5MB   U    
+ghcr.io/shuffle/shuffle-orborus:latest    c0cfe99b0c69        153MB         44.4MB   U    
+ghcr.io/shuffle/shuffle-worker:latest     7794010804f2        164MB         47.4MB   U    
+opensearchproject/opensearch:3.2.0        23297b8d8545       2.48GB         1.01GB   U    
