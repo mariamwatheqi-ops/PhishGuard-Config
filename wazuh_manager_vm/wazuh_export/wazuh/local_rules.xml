@@ -1,0 +1,123 @@
+<!-- Local rules -->
+<!-- Wazuh Manager: /var/ossec/etc/rules/local_rules.xml -->
+
+<group name="web,nginx,false_positive">
+
+  <rule id="311101" level="0">
+    <if_sid>31101</if_sid>
+    <description>Ignore web server 400 errors (reverse proxy / dashboard)</description>
+  </rule>
+
+  <rule id="311151" level="0">
+    <if_sid>31151</if_sid>
+    <description>Ignore multiple web server 400 errors from same IP</description>
+  </rule>
+
+</group>
+
+<group name="local,phishguard,">
+
+  <!-- Base: PhishGuard JSON -->
+  <rule id="100500" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="app">phishguard</field>
+    <description>PhishGuard event detected</description>
+  </rule>
+
+  <rule id="100501" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="data.app">phishguard</field>
+    <description>PhishGuard event detected (data.*)</description>
+  </rule>
+
+  <rule id="100502" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="data.event.app">phishguard</field>
+    <description>PhishGuard event detected (data.event.*)</description>
+  </rule>
+
+  <!-- ======================================================
+       A) CRITICAL: ML + VT together
+       Condition: ml_verdict=phishing AND url_verdict=malicious
+       ====================================================== -->
+
+  <!-- A1 direct -->
+  <rule id="100510" level="15">
+    <if_sid>100500</if_sid>
+    <field name="extra.ml_verdict">phishing</field>
+    <field name="extra.url_verdict">malicious</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING CONFIRMED (ML + VirusTotal) - CRITICAL</description>
+  </rule>
+
+  <!-- A2 data.* -->
+  <rule id="100511" level="15">
+    <if_sid>100501</if_sid>
+    <field name="data.extra.ml_verdict">phishing</field>
+    <field name="data.extra.url_verdict">malicious</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING CONFIRMED (ML + VirusTotal) - CRITICAL</description>
+  </rule>
+
+  <!-- A3 data.event.* -->
+  <rule id="100512" level="15">
+    <if_sid>100502</if_sid>
+    <field name="data.event.extra.ml_verdict">phishing</field>
+    <field name="data.event.extra.url_verdict">malicious</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING CONFIRMED (ML + VirusTotal) - CRITICAL</description>
+  </rule>
+
+  <!-- ======================================================
+       B) HIGH: VT only
+       Condition: url_verdict=malicious
+       ====================================================== -->
+
+  <rule id="100530" level="14">
+    <if_sid>100500</if_sid>
+    <field name="extra.url_verdict">malicious</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING confirmed (VirusTotal only)</description>
+  </rule>
+
+  <rule id="100531" level="14">
+    <if_sid>100501</if_sid>
+    <field name="data.extra.url_verdict">malicious</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING confirmed (VirusTotal only)</description>
+  </rule>
+
+  <rule id="100532" level="14">
+    <if_sid>100502</if_sid>
+    <field name="data.event.extra.url_verdict">malicious</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING confirmed (VirusTotal only)</description>
+  </rule>
+
+  <!-- ======================================================
+       C) MEDIUM: ML only
+       Condition: ml_verdict=phishing
+       ====================================================== -->
+
+  <rule id="100520" level="10">
+    <if_sid>100500</if_sid>
+    <field name="extra.ml_verdict">phishing</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING detected (ML only)</description>
+  </rule>
+
+  <rule id="100521" level="10">
+    <if_sid>100501</if_sid>
+    <field name="data.extra.ml_verdict">phishing</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING detected (ML only)</description>
+  </rule>
+
+  <rule id="100522" level="10">
+    <if_sid>100502</if_sid>
+    <field name="data.event.extra.ml_verdict">phishing</field>
+    <mitre><id>T1566</id></mitre>
+    <description>PhishGuard: PHISHING detected (ML only)</description>
+  </rule>
+
+</group>
